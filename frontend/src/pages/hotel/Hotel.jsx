@@ -1,6 +1,6 @@
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faCircleArrowLeft, faCircleArrowRight, faCircleXmark, faL, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState } from 'react';
 import { Footer } from '../../components/footer/Footer';
 import Header from '../../components/header/Header';
 import MailList from '../../components/mailList/MailList';
@@ -8,6 +8,9 @@ import Navbar from '../../components/navbar/Navbar';
 import './hotel.css';
 
 function Hotel() {
+
+  const [sliderNumber,setSliderNumber] = useState(0);
+  const [open,setOpen] = useState(false)
 
   const photos = [
     {
@@ -27,11 +30,44 @@ function Hotel() {
     },
   ];
 
+  const handleOpen = (i) => {
+      setSliderNumber(i);
+      setOpen(true);
+  }
+
+  const handleMove = (direction) => {
+    let newSlideNumber;
+    if(direction === 'l'){
+      newSlideNumber = sliderNumber === 0 ? 4 : sliderNumber - 1;
+    }else{
+      newSlideNumber = sliderNumber === 4 ? 0 : sliderNumber + 1;
+    }
+    setSliderNumber(newSlideNumber)
+  }
+
   return (
     <div>
       <Navbar />
       <Header type='list' />
       <div className='hotelContainer'>
+        {open && (
+          <div className='slider'>
+            <FontAwesomeIcon icon={faCircleXmark} className='close' onClick={()=>setOpen(false)}/>
+            <FontAwesomeIcon
+              icon={faCircleArrowLeft}
+              className='arrow'
+              onClick={() => handleMove('r')}
+            />
+            <div className='sliderWrapper'>
+              <img src={photos[sliderNumber].src} alt='' />
+            </div>
+            <FontAwesomeIcon
+              icon={faCircleArrowRight}
+              className='arrow'
+              onClick={() => handleMove('r')}
+            />
+          </div>
+        )}
         <div className='hotelWrapper'>
           <button className='bookNow'>Reserve or Book Now!</button>
           <h1 className='hotelTitle'>Grand Hotel</h1>
@@ -48,7 +84,12 @@ function Hotel() {
           <div className='hotelImages'>
             {photos.map((photo, i) => (
               <div className='hotelImageWrapper' key={i}>
-                <img src={photo.src} alt='' className='hotelImg' />
+                <img
+                  onClick={() => handleOpen(i)}
+                  src={photo.src}
+                  alt=''
+                  className='hotelImg'
+                />
               </div>
             ))}
           </div>
@@ -83,8 +124,8 @@ function Hotel() {
           </div>
         </div>
       </div>
-      <MailList/>
-      <Footer/>
+      <MailList />
+      <Footer />
     </div>
   );
 }
