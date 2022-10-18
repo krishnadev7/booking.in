@@ -11,6 +11,7 @@ import {
   faPerson,
 } from '@fortawesome/free-solid-svg-icons';
 import { format } from 'date-fns';
+import {useNavigate} from 'react-router-dom'
 
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -18,6 +19,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRange } from 'react-date-range';
 
 function Header({type}) {
+  const navigate = useNavigate();
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -27,6 +29,7 @@ function Header({type}) {
   ]);
 
   const [openDate, setOpenDate] = useState(false);
+  const [destination, setDestination] = useState("");
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
     adult: 1,
@@ -43,9 +46,17 @@ function Header({type}) {
     });
   };
 
+  const handleSearch = () => {
+    navigate('/hotels',{state: {destination,date,options}})
+  }
+
   return (
     <div className='header'>
-      <div className={type == 'list' ? 'headerContainer listMode' : 'headerContainer'}>
+      <div
+        className={
+          type == 'list' ? 'headerContainer listMode' : 'headerContainer'
+        }
+      >
         <div className='headerList'>
           <div className='headerListItem active'>
             <FontAwesomeIcon icon={faBed} />
@@ -68,7 +79,7 @@ function Header({type}) {
             <span>Airport taxis</span>
           </div>
         </div>
-        { type !== 'list' &&
+        {type !== 'list' && (
           <Fragment>
             <h1 className='headerTitle'>Find your next stay</h1>
             <p className='headerDesc'>
@@ -79,6 +90,8 @@ function Header({type}) {
               <div className='headerSearchItem'>
                 <FontAwesomeIcon icon={faBed} className='headerIcon' />
                 <input
+                  onChange={e => setDestination(e.target.value)}
+                  value={destination}
                   type='text'
                   placeholder='Where are you going?'
                   className='headerSearchInput'
@@ -101,6 +114,7 @@ function Header({type}) {
                     onChange={item => setDate([item.selection])}
                     moveRangeOnFirstSelection={false}
                     ranges={date}
+                    minDate={new Date()}
                     className='date'
                   />
                 )}
@@ -108,6 +122,7 @@ function Header({type}) {
               <div className='headerSearchItem'>
                 <FontAwesomeIcon icon={faPerson} className='headerIcon' />
                 <span
+                  className='headerSearchText'
                   onClick={() => setOpenOptions(!openOptions)}
                 >{`${options.adult} adult . ${options.children} children . ${options.room} room`}</span>
                 {openOptions && (
@@ -179,11 +194,13 @@ function Header({type}) {
                 )}
               </div>
               <div className='headerSearchItem'>
-                <button className='headerBtn'>Search</button>
+                <button className='headerBtn' onClick={handleSearch}>
+                  Search
+                </button>
               </div>
             </div>
           </Fragment>
-        }
+        )}
       </div>
     </div>
   );
