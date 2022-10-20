@@ -1,35 +1,35 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import authRoute from './routes/auth.js';
+import hotelRoute from './routes/hotels.js';
+import roomRoute from './routes/rooms.js';
+import userRoute from './routes/users.js';
 
 const app = express();
 const PORT = 8800;
 
 dotenv.config();
 
-const connect = async() => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log('connected to mongodb');
-    } catch (error) {
-        throw error
-    }
-}
+const connect = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('connected to mongodb');
+  } catch (error) {
+    throw error;
+  }
+};
 
-app.get('/',(req,res) => {
-    res.send("<h1>hello world!!!</h1>")
-})
+app.use(express.json())
 
-mongoose.connection.on("disconnected", () => {
-    console.log('MongoDB is disconnected');
-})
-mongoose.connection.on("connected", () => {
-    console.log('MongoDB is connected');
-})
+app.use('/api/auth', authRoute);
+app.use('/api/users', userRoute);
+app.use('/api/hotels', hotelRoute);
+app.use('/api/rooms', roomRoute);
 
-app.listen(PORT,()=>{
-    connect();
-    console.log(`server running on http://localhost:${PORT}`);
-})
+app.listen(PORT, () => {
+  connect();
+  console.log(`server running on http://localhost:${PORT}`);
+});
 
 //
