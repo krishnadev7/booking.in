@@ -27,6 +27,20 @@ app.use('/api/users', userRoute);
 app.use('/api/hotels', hotelRoute);
 app.use('/api/rooms', roomRoute);
 
+// error handling middleware
+app.use((err,req,res,next) => {
+  const errStatus = err.status || 500;
+  const errMessage = err.message || 'Something went wrong!';
+  return res.status(errStatus).json({
+    success: false,
+    status: errStatus,
+    message: errMessage,
+    stack: err.stack,
+  })
+})
+
+
+
 app.listen(PORT, () => {
   connect();
   console.log(`server running on http://localhost:${PORT}`);

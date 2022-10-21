@@ -1,11 +1,9 @@
 import express from 'express';
 import Hotel from '../models/Hotel.js';
+import { createError } from '../utlis/error.js';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('<h1>hotels.js</h1>');
-});
 
 // Creating
 router.post('/', async (req, res) => {
@@ -43,22 +41,24 @@ router.delete('/:id', async(req,res) => {
 })
 
 // Get
-router.get('/:id', async(req,res) => {
+router.get('/:id', async(req,res,next) => {
     try {
         const hotel = await Hotel.findById(req.params.id)
         res.status(200).json(hotel)
-    } catch (error) {
-        res.status(500).json(error)
+    } catch (err) {
+        next(err)
     }
 })
 
 // Get All
-router.get('/', async(req,res) => {
+router.get('/', async(req,res,next) => {
+  const failed = true;
+  if (failed) return next(createError(401,'not autenticated'))
     try {
-        const hotels = await Hotel.find();
-        res.status(200).json(hotels);
-    } catch (error) {
-        res.status(500).json(error)
+        const hotels = await Hotel.findById('faf');
+        res.status(200).json(hotels)
+    } catch (err) {
+        next(err)
     }
 })
 
