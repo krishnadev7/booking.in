@@ -6,6 +6,7 @@ import hotelRoute from './routes/hotels.js';
 import roomRoute from './routes/rooms.js';
 import userRoute from './routes/users.js';
 import cookieParser from 'cookie-parser';
+import cors from 'cors'
 
 const app = express();
 const PORT = 8800;
@@ -21,6 +22,7 @@ const connect = async () => {
   }
 };
 
+app.use(cors())
 app.use(express.json())
 app.use(cookieParser());
 
