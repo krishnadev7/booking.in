@@ -7,7 +7,7 @@ export default function Feature() {
   const { data, loading, error } = useFetch(
     'hotels/countByCity?cities=berlin,madrid,london'
   );
-  console.log(data);
+  
   return (
     <div className='feature'>
       {loading ? (
