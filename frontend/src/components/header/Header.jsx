@@ -18,8 +18,12 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 
 import { DateRange } from 'react-date-range';
 import { SearchContext } from '../../context/SearchContext';
+import { AuthContext } from '../../context/AuthContext';
 
 function Header({type}) {
+
+  const {user} = useContext(AuthContext)
+
   const navigate = useNavigate();
   const [date, setDate] = useState([
     {
@@ -89,7 +93,7 @@ function Header({type}) {
             <p className='headerDesc'>
               Search deals on hotels, homes, and much more...
             </p>
-            <button className='headerBtn'>Sign in / Register</button>
+            { !user && <button className='headerBtn'>Sign in / Register</button>}
             <div className='headerSearch'>
               <div className='headerSearchItem'>
                 <FontAwesomeIcon icon={faBed} className='headerIcon' />
